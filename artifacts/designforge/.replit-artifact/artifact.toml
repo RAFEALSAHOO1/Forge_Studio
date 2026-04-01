@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "DesignForge Studio"
+version = "1.0.0"
+id = "artifacts/designforge"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24160
+
+[services.development]
+run = "pnpm --filter @workspace/designforge run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/designforge", "run", "build" ]
+publicDir = "artifacts/designforge/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24160"
+BASE_PATH = "/"

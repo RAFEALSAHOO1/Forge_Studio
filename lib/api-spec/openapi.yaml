@@ -1,15 +1,18 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: DesignForge Studio API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: templates
+    description: Design template operations
+  - name: requests
+    description: Design request submission operations
 paths:
   /healthz:
     get:
@@ -24,6 +27,95 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /templates:
+    get:
+      operationId: listTemplates
+      tags: [templates]
+      summary: List all design templates
+      description: Returns paginated list of design templates with optional filtering
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: number
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: number
+      responses:
+        "200":
+          description: List of templates
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TemplateListResponse"
+
+  /templates/{id}:
+    get:
+      operationId: getTemplate
+      tags: [templates]
+      summary: Get single template
+      description: Returns a single design template with customization options
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Template detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Template"
+        "404":
+          description: Template not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /submit-request:
+    post:
+      operationId: submitDesignRequest
+      tags: [requests]
+      summary: Submit a design request
+      description: Submits a customized design request and sends confirmation emails
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitRequestBody"
+      responses:
+        "200":
+          description: Request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubmitRequestResponse"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "429":
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +126,154 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+        - message
+
+    CustomizableField:
+      type: object
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        type:
+          type: string
+          enum: [text, color, font]
+        defaultValue:
+          type: string
+        maxLength:
+          type: number
+        options:
+          type: array
+          items:
+            type: string
+      required:
+        - key
+        - label
+        - type
+        - defaultValue
+
+    Template:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        thumbnail:
+          type: string
+        modelUrl:
+          type: string
+        deliveryTime:
+          type: string
+        price:
+          type: string
+        specifications:
+          type: array
+          items:
+            type: string
+        customizableFields:
+          type: array
+          items:
+            $ref: "#/components/schemas/CustomizableField"
+        availableFonts:
+          type: array
+          items:
+            type: string
+      required:
+        - id
+        - title
+        - description
+        - category
+        - deliveryTime
+        - price
+        - specifications
+        - customizableFields
+        - availableFonts
+
+    TemplateListResponse:
+      type: object
+      properties:
+        templates:
+          type: array
+          items:
+            $ref: "#/components/schemas/Template"
+        total:
+          type: number
+        categories:
+          type: array
+          items:
+            type: string
+      required:
+        - templates
+        - total
+        - categories
+
+    CustomizationData:
+      type: object
+      properties:
+        texts:
+          type: object
+          additionalProperties:
+            type: string
+        colors:
+          type: object
+          additionalProperties:
+            type: string
+        fonts:
+          type: object
+          additionalProperties:
+            type: string
+      required:
+        - texts
+        - colors
+        - fonts
+
+    SubmitRequestBody:
+      type: object
+      properties:
+        templateId:
+          type: string
+        customerEmail:
+          type: string
+          format: email
+        customerName:
+          type: string
+        customizations:
+          $ref: "#/components/schemas/CustomizationData"
+        notes:
+          type: string
+      required:
+        - templateId
+        - customerEmail
+        - customerName
+        - customizations
+
+    SubmitRequestResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        requestId:
+          type: string
+        message:
+          type: string
+        estimatedDelivery:
+          type: string
+      required:
+        - success
+        - requestId
+        - message
+        - estimatedDelivery
