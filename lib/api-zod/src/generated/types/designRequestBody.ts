@@ -5,12 +5,11 @@
  * DesignForge Studio API
  * OpenAPI spec version: 0.1.0
  */
-import type { CustomizationData } from "./customizationData";
+import type { CustomizationsMap } from "./customizationsMap";
 
-export interface SubmitRequestBody {
+export interface DesignRequestBody {
   templateId: string;
-  customerEmail: string;
   customerName: string;
-  customizations: CustomizationData;
-  notes?: string;
+  customerEmail: string;
+  customizations: CustomizationsMap;
 }

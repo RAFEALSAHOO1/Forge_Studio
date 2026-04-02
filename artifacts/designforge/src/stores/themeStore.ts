@@ -1,21 +1,28 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface ThemeState {
-  theme: 'dark' | 'light';
-  setTheme: (theme: 'dark' | 'light') => void;
-  toggleTheme: () => void;
+  theme: 'light' | 'dark';
+  toggle: () => void;
 }
 
-export const useThemeStore = create<ThemeState>()(
-  persist(
-    (set) => ({
-      theme: 'dark',
-      setTheme: (theme) => set({ theme }),
-      toggleTheme: () => set((state) => ({ theme: state.theme === 'dark' ? 'light' : 'dark' })),
-    }),
-    {
-      name: 'designforge-theme',
+export const useThemeStore = create<ThemeState>((set) => ({
+  theme: (localStorage.getItem('df-theme') as 'light' | 'dark') || 'dark',
+  toggle: () => set((state) => {
+    const nextTheme = state.theme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('df-theme', nextTheme);
+    if (nextTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
-  )
-);
+    return { theme: nextTheme };
+  })
+}));
+
+// Initialize theme
+const currentTheme = localStorage.getItem('df-theme') || 'dark';
+if (currentTheme === 'dark') {
+  document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+}

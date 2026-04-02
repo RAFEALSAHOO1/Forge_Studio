@@ -9,11 +9,6 @@ export interface HealthStatus {
   status: string;
 }
 
-export interface ErrorResponse {
-  error: string;
-  message: string;
-}
-
 export type CustomizableFieldType =
   (typeof CustomizableFieldType)[keyof typeof CustomizableFieldType];
 
@@ -52,28 +47,26 @@ export interface TemplateListResponse {
   categories: string[];
 }
 
-export type CustomizationDataTexts = { [key: string]: string };
+export type CustomizationsMapTexts = { [key: string]: string };
 
-export type CustomizationDataColors = { [key: string]: string };
+export type CustomizationsMapColors = { [key: string]: string };
 
-export type CustomizationDataFonts = { [key: string]: string };
+export type CustomizationsMapFonts = { [key: string]: string };
 
-export interface CustomizationData {
-  texts: CustomizationDataTexts;
-  colors: CustomizationDataColors;
-  fonts: CustomizationDataFonts;
+export interface CustomizationsMap {
+  texts: CustomizationsMapTexts;
+  colors: CustomizationsMapColors;
+  fonts: CustomizationsMapFonts;
 }
 
-export interface SubmitRequestBody {
+export interface DesignRequestBody {
   templateId: string;
-  customerEmail: string;
   customerName: string;
-  customizations: CustomizationData;
-  notes?: string;
+  customerEmail: string;
+  customizations: CustomizationsMap;
 }
 
-export interface SubmitRequestResponse {
-  success: boolean;
+export interface DesignRequestResponse {
   requestId: string;
   message: string;
   estimatedDelivery: string;

@@ -6,4 +6,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CustomizationDataColors = { [key: string]: string };
+export type CustomizationsMapColors = { [key: string]: string };

@@ -6,8 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface SubmitRequestResponse {
-  success: boolean;
+export interface DesignRequestResponse {
   requestId: string;
   message: string;
   estimatedDelivery: string;

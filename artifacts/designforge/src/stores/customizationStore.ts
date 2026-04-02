@@ -1,24 +1,23 @@
 import { create } from 'zustand';
-import type { CustomizationData } from '@workspace/api-client-react/src/generated/api.schemas';
+
+interface Customizations {
+  texts: Record<string, string>;
+  colors: Record<string, string>;
+  fonts: Record<string, string>;
+}
 
 interface CustomizationState {
-  selectedTemplateId: string | null;
-  customizations: CustomizationData;
+  templateId: string | null;
+  customizations: Customizations;
   setTemplateId: (id: string) => void;
-  setCustomization: (type: keyof CustomizationData, key: string, value: string) => void;
+  setCustomization: (type: keyof Customizations, key: string, value: string) => void;
   resetCustomization: () => void;
 }
 
-const initialCustomizations: CustomizationData = {
-  texts: {},
-  colors: {},
-  fonts: {}
-};
-
 export const useCustomizationStore = create<CustomizationState>((set) => ({
-  selectedTemplateId: null,
-  customizations: initialCustomizations,
-  setTemplateId: (id) => set({ selectedTemplateId: id }),
+  templateId: null,
+  customizations: { texts: {}, colors: {}, fonts: {} },
+  setTemplateId: (id) => set({ templateId: id }),
   setCustomization: (type, key, value) => set((state) => ({
     customizations: {
       ...state.customizations,
@@ -28,5 +27,5 @@ export const useCustomizationStore = create<CustomizationState>((set) => ({
       }
     }
   })),
-  resetCustomization: () => set({ customizations: initialCustomizations, selectedTemplateId: null })
+  resetCustomization: () => set({ customizations: { texts: {}, colors: {}, fonts: {} } })
 }));

@@ -1,68 +1,101 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'wouter';
-import { motion } from 'framer-motion';
-import { CheckCircle, ArrowRight, Package, Mail } from 'lucide-react';
-import { Link } from 'wouter';
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "wouter";
+import { motion } from "framer-motion";
+import { CheckCircle2, Copy, FileText, Clock, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+
+interface OrderDetails {
+  requestId: string;
+  templateName?: string;
+  message: string;
+  estimatedDelivery: string;
+}
 
 export default function Confirmation() {
+  const [order, setOrder] = useState<OrderDetails | null>(null);
   const [, setLocation] = useLocation();
-  const [requestId, setRequestId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Basic param extraction since wouter doesn't have a built-in hook for search params in v3
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get('requestId');
-    if (!id) {
-      setLocation('/');
+    const stored = sessionStorage.getItem('lastOrder');
+    if (stored) {
+      setOrder(JSON.parse(stored));
     } else {
-      setRequestId(id);
+      // If no order found, redirect to browse
+      setLocation("/browse");
     }
   }, [setLocation]);
 
-  if (!requestId) return null;
+  const copyRequestId = () => {
+    if (order?.requestId) {
+      navigator.clipboard.writeText(order.requestId);
+      toast.success("Request ID copied to clipboard");
+    }
+  };
+
+  if (!order) return null;
 
   return (
-    <div className="flex-grow flex items-center justify-center p-6 w-full">
+    <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, type: 'spring' }}
-        className="glass-panel max-w-lg w-full rounded-3xl p-8 md:p-12 text-center relative overflow-hidden"
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.5, type: "spring", bounce: 0.4 }}
+        className="max-w-md w-full glass p-8 rounded-3xl relative overflow-hidden"
       >
-        <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-emerald-400 to-teal-500" />
+        <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-primary via-indigo-500 to-primary" />
         
-        <motion.div 
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring', bounce: 0.5 }}
-          className="w-24 h-24 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-8 text-emerald-500"
-        >
-          <CheckCircle size={48} />
-        </motion.div>
+        <div className="flex flex-col items-center text-center mb-8 pt-4">
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring" }}
+            className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center mb-6 text-primary"
+          >
+            <CheckCircle2 className="w-10 h-10" />
+          </motion.div>
+          <h1 className="text-3xl font-bold mb-2">Request Received</h1>
+          <p className="text-muted-foreground">{order.message}</p>
+        </div>
 
-        <h1 className="text-3xl font-bold mb-4">Request Confirmed</h1>
-        <p className="text-foreground/70 mb-8">
-          Your bespoke design request has been received by our studio. Our artisans will review your customizations shortly.
-        </p>
+        <div className="space-y-4 bg-background/50 rounded-2xl p-6 border border-border/50 mb-8">
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+              <FileText className="w-4 h-4 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Template</p>
+              <p className="font-medium">{order.templateName || "Custom Template"}</p>
+            </div>
+          </div>
+          
+          <div className="flex items-start gap-4">
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+              <Clock className="w-4 h-4 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Estimated Delivery</p>
+              <p className="font-medium">{order.estimatedDelivery}</p>
+            </div>
+          </div>
 
-        <div className="bg-black/5 dark:bg-white/5 rounded-2xl p-6 text-left mb-8 border border-black/5 dark:border-white/5">
-          <div className="flex items-center gap-3 mb-4 text-sm font-medium text-foreground/60 uppercase tracking-wider">
-            <Package size={16} />
-            Order Summary
-          </div>
-          <div className="flex justify-between items-end border-b border-black/10 dark:border-white/10 pb-4 mb-4">
-            <span className="text-foreground/70">Request ID</span>
-            <span className="font-mono font-semibold">{requestId}</span>
-          </div>
-          <div className="flex items-start gap-3 text-sm text-foreground/80">
-            <Mail size={16} className="mt-1 flex-shrink-0 text-primary" />
-            <p>A confirmation email has been sent with further details and an estimated delivery timeline.</p>
+          <div className="pt-4 mt-4 border-t border-border/50 flex flex-col">
+            <p className="text-sm text-muted-foreground mb-2">Request ID</p>
+            <div className="flex items-center justify-between bg-background p-3 rounded-xl border border-border/50">
+              <code className="font-mono text-primary text-sm font-bold">{order.requestId}</code>
+              <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={copyRequestId}>
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
 
-        <Link href="/browse" className="inline-flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-foreground text-background font-medium hover:scale-[1.02] transition-transform">
-          Back to Gallery <ArrowRight size={18} />
-        </Link>
+        <div className="flex justify-center">
+          <Button variant="outline" className="w-full h-12 rounded-xl group" onClick={() => setLocation("/browse")}>
+            Browse More Templates
+            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+          </Button>
+        </div>
       </motion.div>
     </div>
   );

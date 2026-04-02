@@ -6,4 +6,4 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export type CustomizationDataFonts = { [key: string]: string };
+export type CustomizationsMapTexts = { [key: string]: string };

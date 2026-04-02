@@ -17,11 +17,10 @@ import type {
 } from "@tanstack/react-query";
 
 import type {
-  ErrorResponse,
+  DesignRequestBody,
+  DesignRequestResponse,
   HealthStatus,
   ListTemplatesParams,
-  SubmitRequestBody,
-  SubmitRequestResponse,
   Template,
   TemplateListResponse,
 } from "./api.schemas";
@@ -36,7 +35,6 @@ type Awaited<O> = O extends AwaitedInput<infer T> ? T : never;
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const getHealthCheckUrl = () => {
@@ -112,8 +110,7 @@ export function useHealthCheck<
 }
 
 /**
- * Returns paginated list of design templates with optional filtering
- * @summary List all design templates
+ * @summary List design templates
  */
 export const getListTemplatesUrl = (params?: ListTemplatesParams) => {
   const normalizedParams = new URLSearchParams();
@@ -180,7 +177,7 @@ export type ListTemplatesQueryResult = NonNullable<
 export type ListTemplatesQueryError = ErrorType<unknown>;
 
 /**
- * @summary List all design templates
+ * @summary List design templates
  */
 
 export function useListTemplates<
@@ -207,8 +204,7 @@ export function useListTemplates<
 }
 
 /**
- * Returns a single design template with customization options
- * @summary Get single template
+ * @summary Get a single template
  */
 export const getGetTemplateUrl = (id: string) => {
   return `/api/templates/${id}`;
@@ -230,7 +226,7 @@ export const getGetTemplateQueryKey = (id: string) => {
 
 export const getGetTemplateQueryOptions = <
   TData = Awaited<ReturnType<typeof getTemplate>>,
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<void>,
 >(
   id: string,
   options?: {
@@ -265,15 +261,15 @@ export const getGetTemplateQueryOptions = <
 export type GetTemplateQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTemplate>>
 >;
-export type GetTemplateQueryError = ErrorType<ErrorResponse>;
+export type GetTemplateQueryError = ErrorType<void>;
 
 /**
- * @summary Get single template
+ * @summary Get a single template
  */
 
 export function useGetTemplate<
   TData = Awaited<ReturnType<typeof getTemplate>>,
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<void>,
 >(
   id: string,
   options?: {
@@ -295,40 +291,39 @@ export function useGetTemplate<
 }
 
 /**
- * Submits a customized design request and sends confirmation emails
- * @summary Submit a design request
+ * @summary Submit a design customization request
  */
 export const getSubmitDesignRequestUrl = () => {
   return `/api/submit-request`;
 };
 
 export const submitDesignRequest = async (
-  submitRequestBody: SubmitRequestBody,
+  designRequestBody: DesignRequestBody,
   options?: RequestInit,
-): Promise<SubmitRequestResponse> => {
-  return customFetch<SubmitRequestResponse>(getSubmitDesignRequestUrl(), {
+): Promise<DesignRequestResponse> => {
+  return customFetch<DesignRequestResponse>(getSubmitDesignRequestUrl(), {
     ...options,
     method: "POST",
     headers: { "Content-Type": "application/json", ...options?.headers },
-    body: JSON.stringify(submitRequestBody),
+    body: JSON.stringify(designRequestBody),
   });
 };
 
 export const getSubmitDesignRequestMutationOptions = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof submitDesignRequest>>,
     TError,
-    { data: BodyType<SubmitRequestBody> },
+    { data: BodyType<DesignRequestBody> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof submitDesignRequest>>,
   TError,
-  { data: BodyType<SubmitRequestBody> },
+  { data: BodyType<DesignRequestBody> },
   TContext
 > => {
   const mutationKey = ["submitDesignRequest"];
@@ -342,7 +337,7 @@ export const getSubmitDesignRequestMutationOptions = <
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof submitDesignRequest>>,
-    { data: BodyType<SubmitRequestBody> }
+    { data: BodyType<DesignRequestBody> }
   > = (props) => {
     const { data } = props ?? {};
 
@@ -355,27 +350,27 @@ export const getSubmitDesignRequestMutationOptions = <
 export type SubmitDesignRequestMutationResult = NonNullable<
   Awaited<ReturnType<typeof submitDesignRequest>>
 >;
-export type SubmitDesignRequestMutationBody = BodyType<SubmitRequestBody>;
-export type SubmitDesignRequestMutationError = ErrorType<ErrorResponse>;
+export type SubmitDesignRequestMutationBody = BodyType<DesignRequestBody>;
+export type SubmitDesignRequestMutationError = ErrorType<void>;
 
 /**
- * @summary Submit a design request
+ * @summary Submit a design customization request
  */
 export const useSubmitDesignRequest = <
-  TError = ErrorType<ErrorResponse>,
+  TError = ErrorType<void>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
     Awaited<ReturnType<typeof submitDesignRequest>>,
     TError,
-    { data: BodyType<SubmitRequestBody> },
+    { data: BodyType<DesignRequestBody> },
     TContext
   >;
   request?: SecondParameter<typeof customFetch>;
 }): UseMutationResult<
   Awaited<ReturnType<typeof submitDesignRequest>>,
   TError,
-  { data: BodyType<SubmitRequestBody> },
+  { data: BodyType<DesignRequestBody> },
   TContext
 > => {
   return useMutation(getSubmitDesignRequestMutationOptions(options));

@@ -8,7 +8,6 @@
 import * as zod from "zod";
 
 /**
- * Returns server health status
  * @summary Health check
  */
 export const HealthCheckResponse = zod.object({
@@ -16,13 +15,15 @@ export const HealthCheckResponse = zod.object({
 });
 
 /**
- * Returns paginated list of design templates with optional filtering
- * @summary List all design templates
+ * @summary List design templates
  */
+export const listTemplatesQueryLimitDefault = 20;
+export const listTemplatesQueryOffsetDefault = 0;
+
 export const ListTemplatesQueryParams = zod.object({
   category: zod.coerce.string().optional(),
-  limit: zod.coerce.number().optional(),
-  offset: zod.coerce.number().optional(),
+  limit: zod.coerce.number().default(listTemplatesQueryLimitDefault),
+  offset: zod.coerce.number().default(listTemplatesQueryOffsetDefault),
 });
 
 export const ListTemplatesResponse = zod.object({
@@ -55,8 +56,7 @@ export const ListTemplatesResponse = zod.object({
 });
 
 /**
- * Returns a single design template with customization options
- * @summary Get single template
+ * @summary Get a single template
  */
 export const GetTemplateParams = zod.object({
   id: zod.coerce.string(),
@@ -86,23 +86,20 @@ export const GetTemplateResponse = zod.object({
 });
 
 /**
- * Submits a customized design request and sends confirmation emails
- * @summary Submit a design request
+ * @summary Submit a design customization request
  */
 export const SubmitDesignRequestBody = zod.object({
   templateId: zod.string(),
-  customerEmail: zod.string().email(),
   customerName: zod.string(),
+  customerEmail: zod.string(),
   customizations: zod.object({
     texts: zod.record(zod.string(), zod.string()),
     colors: zod.record(zod.string(), zod.string()),
     fonts: zod.record(zod.string(), zod.string()),
   }),
-  notes: zod.string().optional(),
 });
 
 export const SubmitDesignRequestResponse = zod.object({
-  success: zod.boolean(),
   requestId: zod.string(),
   message: zod.string(),
   estimatedDelivery: zod.string(),
