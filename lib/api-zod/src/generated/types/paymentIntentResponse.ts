@@ -6,11 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface DesignRequestResponse {
-  requestId: string;
-  message: string;
-  estimatedDelivery: string;
-  paymentRequired: boolean;
+export interface PaymentIntentResponse {
+  clientSecret: string;
+  paymentIntentId: string;
   amount: number;
   currency: string;
+  stripePublishableKey: string;
 }

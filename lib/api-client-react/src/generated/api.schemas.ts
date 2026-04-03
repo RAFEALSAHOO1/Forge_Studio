@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * DesignForge Studio API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -27,18 +27,29 @@ export interface CustomizableField {
   options?: string[];
 }
 
+export type TemplateComplexity =
+  (typeof TemplateComplexity)[keyof typeof TemplateComplexity];
+
+export const TemplateComplexity = {
+  simple: "simple",
+  moderate: "moderate",
+  complex: "complex",
+} as const;
+
 export interface Template {
   id: string;
   title: string;
   description: string;
   category: string;
   thumbnail?: string;
-  modelUrl?: string;
   deliveryTime: string;
   price: string;
+  priceAmount: number;
   specifications: string[];
   customizableFields: CustomizableField[];
   availableFonts: string[];
+  tags?: string[];
+  complexity?: TemplateComplexity;
 }
 
 export interface TemplateListResponse {
@@ -63,6 +74,8 @@ export interface DesignRequestBody {
   templateId: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
+  countryCode?: string;
   customizations: CustomizationsMap;
 }
 
@@ -70,10 +83,146 @@ export interface DesignRequestResponse {
   requestId: string;
   message: string;
   estimatedDelivery: string;
+  paymentRequired: boolean;
+  amount: number;
+  currency: string;
+}
+
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus];
+
+export const OrderStatus = {
+  pending: "pending",
+  confirmed: "confirmed",
+  in_progress: "in_progress",
+  review: "review",
+  completed: "completed",
+  cancelled: "cancelled",
+} as const;
+
+export type OrderPaymentStatus =
+  (typeof OrderPaymentStatus)[keyof typeof OrderPaymentStatus];
+
+export const OrderPaymentStatus = {
+  unpaid: "unpaid",
+  paid: "paid",
+  refunded: "refunded",
+} as const;
+
+export interface Order {
+  id: string;
+  templateId: string;
+  customerName: string;
+  customerEmail: string;
+  status: OrderStatus;
+  paymentStatus: OrderPaymentStatus;
+  amount: number;
+  currency: string;
+  deliveryTime?: string;
+  createdAt: string;
+  updatedAt: string;
+  customizations?: CustomizationsMap;
+}
+
+export interface OrderListResponse {
+  orders: Order[];
+  total: number;
+}
+
+export type OrderTrackingResponseTimelineItem = {
+  step: string;
+  label: string;
+  completed: boolean;
+};
+
+export interface OrderTrackingResponse {
+  orderId: string;
+  status: string;
+  paymentStatus: string;
+  customerName: string;
+  templateId: string;
+  deliveryTime: string;
+  createdAt: string;
+  timeline: OrderTrackingResponseTimelineItem[];
+}
+
+export interface PaymentIntentBody {
+  orderId: string;
+  currency?: string;
+}
+
+export interface PaymentIntentResponse {
+  clientSecret: string;
+  paymentIntentId: string;
+  amount: number;
+  currency: string;
+  stripePublishableKey: string;
+}
+
+export interface PaymentVerifyBody {
+  orderId: string;
+  paymentIntentId: string;
+}
+
+export interface PaymentVerifyResponse {
+  success: boolean;
+  orderId: string;
+  status: string;
+}
+
+export interface UserProfile {
+  id: string;
+  email?: string;
+  phone?: string;
+  name?: string;
+  countryCode?: string;
+  currency?: string;
+  createdAt?: string;
+}
+
+export interface UpdateProfileBody {
+  name?: string;
+  phone?: string;
+  countryCode?: string;
+  currency?: string;
+}
+
+export interface FontItem {
+  name: string;
+  category: string;
+  variants?: string[];
+  previewText?: string;
+}
+
+export interface FontListResponse {
+  fonts: FontItem[];
+  total: number;
+  categories: string[];
+}
+
+export interface ColorPalette {
+  name: string;
+  colors: string[];
+  category: string;
+}
+
+export interface ColorListResponse {
+  palettes: ColorPalette[];
+  totalColors: number;
+  categories: string[];
 }
 
 export type ListTemplatesParams = {
   category?: string;
+  search?: string;
   limit?: number;
   offset?: number;
+};
+
+export type ListFontsParams = {
+  category?: string;
+  search?: string;
+};
+
+export type ListColorsParams = {
+  category?: string;
 };

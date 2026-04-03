@@ -3,9 +3,10 @@
  * Do not edit manually.
  * Api
  * DesignForge Studio API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { CustomizableField } from "./customizableField";
+import type { TemplateComplexity } from "./templateComplexity";
 
 export interface Template {
   id: string;
@@ -13,10 +14,12 @@ export interface Template {
   description: string;
   category: string;
   thumbnail?: string;
-  modelUrl?: string;
   deliveryTime: string;
   price: string;
+  priceAmount: number;
   specifications: string[];
   customizableFields: CustomizableField[];
   availableFonts: string[];
+  tags?: string[];
+  complexity?: TemplateComplexity;
 }

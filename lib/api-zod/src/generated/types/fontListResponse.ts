@@ -5,10 +5,10 @@
  * DesignForge Studio API
  * OpenAPI spec version: 0.2.0
  */
-import type { Template } from "./template";
+import type { FontItem } from "./fontItem";
 
-export interface TemplateListResponse {
-  templates: Template[];
+export interface FontListResponse {
+  fonts: FontItem[];
   total: number;
   categories: string[];
 }

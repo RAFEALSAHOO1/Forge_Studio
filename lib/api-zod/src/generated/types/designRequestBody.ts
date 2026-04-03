@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * DesignForge Studio API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import type { CustomizationsMap } from "./customizationsMap";
 
@@ -11,5 +11,7 @@ export interface DesignRequestBody {
   templateId: string;
   customerName: string;
   customerEmail: string;
+  customerPhone?: string;
+  countryCode?: string;
   customizations: CustomizationsMap;
 }

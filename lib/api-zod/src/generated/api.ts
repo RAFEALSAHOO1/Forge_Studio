@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * DesignForge Studio API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from "zod";
 
@@ -17,11 +17,12 @@ export const HealthCheckResponse = zod.object({
 /**
  * @summary List design templates
  */
-export const listTemplatesQueryLimitDefault = 20;
+export const listTemplatesQueryLimitDefault = 24;
 export const listTemplatesQueryOffsetDefault = 0;
 
 export const ListTemplatesQueryParams = zod.object({
   category: zod.coerce.string().optional(),
+  search: zod.coerce.string().optional(),
   limit: zod.coerce.number().default(listTemplatesQueryLimitDefault),
   offset: zod.coerce.number().default(listTemplatesQueryOffsetDefault),
 });
@@ -34,9 +35,9 @@ export const ListTemplatesResponse = zod.object({
       description: zod.string(),
       category: zod.string(),
       thumbnail: zod.string().optional(),
-      modelUrl: zod.string().optional(),
       deliveryTime: zod.string(),
       price: zod.string(),
+      priceAmount: zod.number(),
       specifications: zod.array(zod.string()),
       customizableFields: zod.array(
         zod.object({
@@ -49,6 +50,8 @@ export const ListTemplatesResponse = zod.object({
         }),
       ),
       availableFonts: zod.array(zod.string()),
+      tags: zod.array(zod.string()).optional(),
+      complexity: zod.enum(["simple", "moderate", "complex"]).optional(),
     }),
   ),
   total: zod.number(),
@@ -68,9 +71,9 @@ export const GetTemplateResponse = zod.object({
   description: zod.string(),
   category: zod.string(),
   thumbnail: zod.string().optional(),
-  modelUrl: zod.string().optional(),
   deliveryTime: zod.string(),
   price: zod.string(),
+  priceAmount: zod.number(),
   specifications: zod.array(zod.string()),
   customizableFields: zod.array(
     zod.object({
@@ -83,6 +86,8 @@ export const GetTemplateResponse = zod.object({
     }),
   ),
   availableFonts: zod.array(zod.string()),
+  tags: zod.array(zod.string()).optional(),
+  complexity: zod.enum(["simple", "moderate", "complex"]).optional(),
 });
 
 /**
@@ -92,6 +97,8 @@ export const SubmitDesignRequestBody = zod.object({
   templateId: zod.string(),
   customerName: zod.string(),
   customerEmail: zod.string(),
+  customerPhone: zod.string().optional(),
+  countryCode: zod.string().optional(),
   customizations: zod.object({
     texts: zod.record(zod.string(), zod.string()),
     colors: zod.record(zod.string(), zod.string()),
@@ -103,4 +110,207 @@ export const SubmitDesignRequestResponse = zod.object({
   requestId: zod.string(),
   message: zod.string(),
   estimatedDelivery: zod.string(),
+  paymentRequired: zod.boolean(),
+  amount: zod.number(),
+  currency: zod.string(),
+});
+
+/**
+ * @summary List orders for authenticated user
+ */
+export const ListOrdersResponse = zod.object({
+  orders: zod.array(
+    zod.object({
+      id: zod.string(),
+      templateId: zod.string(),
+      customerName: zod.string(),
+      customerEmail: zod.string(),
+      status: zod.enum([
+        "pending",
+        "confirmed",
+        "in_progress",
+        "review",
+        "completed",
+        "cancelled",
+      ]),
+      paymentStatus: zod.enum(["unpaid", "paid", "refunded"]),
+      amount: zod.number(),
+      currency: zod.string(),
+      deliveryTime: zod.string().optional(),
+      createdAt: zod.string(),
+      updatedAt: zod.string(),
+      customizations: zod
+        .object({
+          texts: zod.record(zod.string(), zod.string()),
+          colors: zod.record(zod.string(), zod.string()),
+          fonts: zod.record(zod.string(), zod.string()),
+        })
+        .optional(),
+    }),
+  ),
+  total: zod.number(),
+});
+
+/**
+ * @summary Get a specific order
+ */
+export const GetOrderParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const GetOrderResponse = zod.object({
+  id: zod.string(),
+  templateId: zod.string(),
+  customerName: zod.string(),
+  customerEmail: zod.string(),
+  status: zod.enum([
+    "pending",
+    "confirmed",
+    "in_progress",
+    "review",
+    "completed",
+    "cancelled",
+  ]),
+  paymentStatus: zod.enum(["unpaid", "paid", "refunded"]),
+  amount: zod.number(),
+  currency: zod.string(),
+  deliveryTime: zod.string().optional(),
+  createdAt: zod.string(),
+  updatedAt: zod.string(),
+  customizations: zod
+    .object({
+      texts: zod.record(zod.string(), zod.string()),
+      colors: zod.record(zod.string(), zod.string()),
+      fonts: zod.record(zod.string(), zod.string()),
+    })
+    .optional(),
+});
+
+/**
+ * @summary Track order by ID (public, no auth needed)
+ */
+export const TrackOrderParams = zod.object({
+  id: zod.coerce.string(),
+});
+
+export const TrackOrderResponse = zod.object({
+  orderId: zod.string(),
+  status: zod.string(),
+  paymentStatus: zod.string(),
+  customerName: zod.string(),
+  templateId: zod.string(),
+  deliveryTime: zod.string(),
+  createdAt: zod.string(),
+  timeline: zod.array(
+    zod.object({
+      step: zod.string(),
+      label: zod.string(),
+      completed: zod.boolean(),
+    }),
+  ),
+});
+
+/**
+ * @summary Create a Stripe payment intent
+ */
+export const createPaymentIntentBodyCurrencyDefault = `INR`;
+
+export const CreatePaymentIntentBody = zod.object({
+  orderId: zod.string(),
+  currency: zod.string().default(createPaymentIntentBodyCurrencyDefault),
+});
+
+export const CreatePaymentIntentResponse = zod.object({
+  clientSecret: zod.string(),
+  paymentIntentId: zod.string(),
+  amount: zod.number(),
+  currency: zod.string(),
+  stripePublishableKey: zod.string(),
+});
+
+/**
+ * @summary Verify payment and update order
+ */
+export const VerifyPaymentBody = zod.object({
+  orderId: zod.string(),
+  paymentIntentId: zod.string(),
+});
+
+export const VerifyPaymentResponse = zod.object({
+  success: zod.boolean(),
+  orderId: zod.string(),
+  status: zod.string(),
+});
+
+/**
+ * @summary Get current user profile
+ */
+export const GetUserProfileResponse = zod.object({
+  id: zod.string(),
+  email: zod.string().optional(),
+  phone: zod.string().optional(),
+  name: zod.string().optional(),
+  countryCode: zod.string().optional(),
+  currency: zod.string().optional(),
+  createdAt: zod.string().optional(),
+});
+
+/**
+ * @summary Update user profile
+ */
+export const UpdateUserProfileBody = zod.object({
+  name: zod.string().optional(),
+  phone: zod.string().optional(),
+  countryCode: zod.string().optional(),
+  currency: zod.string().optional(),
+});
+
+export const UpdateUserProfileResponse = zod.object({
+  id: zod.string(),
+  email: zod.string().optional(),
+  phone: zod.string().optional(),
+  name: zod.string().optional(),
+  countryCode: zod.string().optional(),
+  currency: zod.string().optional(),
+  createdAt: zod.string().optional(),
+});
+
+/**
+ * @summary List available fonts
+ */
+export const ListFontsQueryParams = zod.object({
+  category: zod.coerce.string().optional(),
+  search: zod.coerce.string().optional(),
+});
+
+export const ListFontsResponse = zod.object({
+  fonts: zod.array(
+    zod.object({
+      name: zod.string(),
+      category: zod.string(),
+      variants: zod.array(zod.string()).optional(),
+      previewText: zod.string().optional(),
+    }),
+  ),
+  total: zod.number(),
+  categories: zod.array(zod.string()),
+});
+
+/**
+ * @summary List color palettes
+ */
+export const ListColorsQueryParams = zod.object({
+  category: zod.coerce.string().optional(),
+});
+
+export const ListColorsResponse = zod.object({
+  palettes: zod.array(
+    zod.object({
+      name: zod.string(),
+      colors: zod.array(zod.string()),
+      category: zod.string(),
+    }),
+  ),
+  totalColors: zod.number(),
+  categories: zod.array(zod.string()),
 });

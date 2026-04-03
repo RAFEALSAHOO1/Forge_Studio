@@ -5,10 +5,10 @@
  * DesignForge Studio API
  * OpenAPI spec version: 0.2.0
  */
-import type { Template } from "./template";
+import type { ColorPalette } from "./colorPalette";
 
-export interface TemplateListResponse {
-  templates: Template[];
-  total: number;
+export interface ColorListResponse {
+  palettes: ColorPalette[];
+  totalColors: number;
   categories: string[];
 }
