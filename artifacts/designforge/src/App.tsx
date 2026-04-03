@@ -7,7 +7,16 @@ import Home from "@/pages/Home";
 import Browse from "@/pages/Browse";
 import Customize from "@/pages/Customize";
 import Confirmation from "@/pages/Confirmation";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import VerifyEmail from "@/pages/VerifyEmail";
+import RequestPasswordReset from "@/pages/RequestPasswordReset";
+import ResetPassword from "@/pages/ResetPassword";
+import AdminPanel from "@/pages/AdminPanel";
+import OwnerPanel from "@/pages/OwnerPanel";
 import { Navbar } from "@/components/Navbar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { AdminRoute } from "@/components/AdminRoute";
 
 const queryClient = new QueryClient();
 
@@ -15,9 +24,40 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/signup" component={Signup} />
+      <Route path="/verify-email" component={VerifyEmail} />
+      <Route path="/request-password-reset" component={RequestPasswordReset} />
+      <Route path="/reset-password" component={ResetPassword} />
       <Route path="/browse" component={Browse} />
-      <Route path="/customize/:id" component={Customize} />
-      <Route path="/confirmation" component={Confirmation} />
+      <Route path="/admin">
+        {() => (
+          <AdminRoute>
+            <AdminPanel />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/owner">
+        {() => (
+          <AdminRoute>
+            <OwnerPanel />
+          </AdminRoute>
+        )}
+      </Route>
+      <Route path="/customize/:id">
+        {() => (
+          <ProtectedRoute>
+            <Customize />
+          </ProtectedRoute>
+        )}
+      </Route>
+      <Route path="/confirmation">
+        {() => (
+          <ProtectedRoute>
+            <Confirmation />
+          </ProtectedRoute>
+        )}
+      </Route>
       <Route component={NotFound} />
     </Switch>
   );

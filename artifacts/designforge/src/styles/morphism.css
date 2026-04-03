@@ -1,0 +1,814 @@
+:root {
+  /* Primary Colors */
+  --color-indigo: #6366F1;
+  --color-pink: #EC4899;
+  --color-cyan: #06B6D4;
+  --color-violet: #8B5CF6;
+  --color-orange: #F97316;
+  --color-red: #EF4444;
+  --color-green: #22C55E;
+  --color-yellow: #EAB308;
+  --color-slate: #64748B;
+  --color-slate-dark: #1E293B;
+  --color-sky: #0EA5E9;
+  --color-purple: #A78BFA;
+  --color-rose: #FB7185;
+  --color-teal: #2DD4BF;
+  --color-amber: #FBBF24;
+  --color-emerald: #34D399;
+  --color-blue: #60A5FA;
+  --color-fuchsia: #F472B6;
+  --color-peach: #FFB347;
+  --color-white: #FFFFFF;
+
+  /* Glassmorphism */
+  --glass-background: rgba(255, 255, 255, 0.1);
+  --glass-backdrop: rgba(255, 255, 255, 0.15);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --glass-filter: blur(4px);
+
+  /* Watermorphism */
+  --water-background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  --water-shadow: 0 8px 32px rgba(6, 182, 212, 0.2);
+  --water-border: 1px solid rgba(6, 182, 212, 0.3);
+
+  /* Lightmorphism */
+  --light-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+  --light-reflect: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --light-background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.05) 0%,
+    rgba(236, 72, 153, 0.05) 100%
+  );
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 400ms ease-in-out;
+}
+
+/* ============================================== */
+/* GLASSMORPHISM EFFECTS */
+/* ============================================== */
+
+.glass,
+.glass-panel,
+.glass-card {
+  background: var(--glass-background);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+}
+
+.glass-panel {
+  padding: 2rem;
+}
+
+.glass-card {
+  padding: 1.5rem;
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.45);
+  transform: translateY(-4px);
+}
+
+.glass-container {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.06)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.25);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0) 50%
+  );
+  pointer-events: none;
+}
+
+/* Frosted glass with deep blur */
+.glass-frosted {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+}
+
+/* Glass with color tint */
+.glass-blue {
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.glass-purple {
+  background: rgba(139, 92, 246, 0.08);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.glass-pink {
+  background: rgba(236, 72, 153, 0.08);
+  border: 1px solid rgba(236, 72, 153, 0.2);
+}
+
+.glass-cyan {
+  background: rgba(6, 182, 212, 0.08);
+  border: 1px solid rgba(6, 182, 212, 0.2);
+}
+
+/* ============================================== */
+/* WATERMORPHISM EFFECTS */
+/* ============================================== */
+
+.water,
+.water-button,
+.water-panel {
+  background: var(--water-background);
+  border: var(--water-border);
+  box-shadow: var(--water-shadow);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.water-panel {
+  padding: 2rem;
+}
+
+.water-button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: visible;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.3) 0%,
+    rgba(139, 92, 246, 0.3) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.water-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(6, 182, 212, 0.4);
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.4) 0%,
+    rgba(139, 92, 246, 0.4) 100%
+  );
+}
+
+.water-button:active {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+}
+
+/* Wavy border effect */
+.water-wavy {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.15),
+    rgba(139, 92, 246, 0.15)
+  );
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.water-wavy::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #06B6D4,
+    #8B5CF6,
+    #06B6D4
+  );
+  border-radius: 12px;
+  z-index: -1;
+  animation: waterWave 4s ease-in-out infinite;
+}
+
+@keyframes waterWave {
+  0% {
+    opacity: 0.5;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-5px) scaleX(1.02);
+  }
+  100% {
+    opacity: 0.5;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+/* Ripple effect for water buttons */
+.water-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.water-ripple::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  to {
+    width: 100px;
+    height: 100px;
+    opacity: 0;
+  }
+}
+
+/* ============================================== */
+/* LIGHTMORPHISM EFFECTS */
+/* ============================================== */
+
+.light,
+.light-panel,
+.light-card {
+  background: var(--light-background);
+  box-shadow: var(--light-glow);
+  border-radius: 16px;
+  position: relative;
+}
+
+.light-panel {
+  padding: 2rem;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.light-card {
+  padding: 1.5rem;
+  border: 1px solid rgba(236, 72, 153, 0.15);
+  box-shadow: var(--light-glow), var(--light-reflect);
+  transition: all var(--transition-base);
+}
+
+.light-card:hover {
+  box-shadow: 0 0 40px rgba(99, 102, 241, 0.4), var(--light-reflect);
+  transform: translateY(-2px);
+}
+
+/* Light container with radial glow */
+.light-container {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.08),
+    rgba(236, 72, 153, 0.08)
+  );
+  border: 1px solid rgba(99, 102, 241, 0.15);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(99, 102, 241, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.light-container::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle,
+    rgba(99, 102, 241, 0.1) 0%,
+    transparent 70%
+  );
+  animation: lightPulse 4s ease-in-out infinite;
+}
+
+@keyframes lightPulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Glow text effect */
+.light-text {
+  color: #1E293B;
+  text-shadow: 0 0 20px rgba(99, 102, 241, 0.3),
+    0 0 40px rgba(236, 72, 153, 0.2);
+  font-weight: 600;
+}
+
+/* Light gradient text */
+.light-gradient-text {
+  background: linear-gradient(
+    135deg,
+    #6366F1 0%,
+    #EC4899 50%,
+    #06B6D4 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%,
+  100% {
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(30deg);
+  }
+}
+
+/* ============================================== */
+/* HYBRID MORPHISM EFFECTS */
+/* ============================================== */
+
+/* Glass + Light combination */
+.morphism-glass-light {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+}
+
+/* Glass + Water combination */
+.morphism-glass-water {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.12),
+    rgba(6, 182, 212, 0.08)
+  );
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(6, 182, 212, 0.15);
+}
+
+/* Water + Light combination */
+.morphism-water-light {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.08),
+    rgba(139, 92, 246, 0.08)
+  );
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.2),
+    0 0 20px rgba(99, 102, 241, 0.15);
+}
+
+/* ============================================== */
+/* BUTTON MORPHISM VARIATIONS */
+/* ============================================== */
+
+/* Glass Button */
+.btn-glass {
+  background: var(--glass-background);
+  backdrop-filter: var(--glass-filter);
+  -webkit-backdrop-filter: var(--glass-filter);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  border-radius: 16px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  color: white;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glass:hover {
+  transform: translateY(-2px);
+}
+
+.btn-glass::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.btn-glass:hover::before {
+  left: 100%;
+}
+
+/* Water Button (already defined above) */
+
+/* Light Button */
+.btn-light {
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.2),
+    rgba(236, 72, 153, 0.2)
+  );
+  border: 1px solid rgba(99, 102, 241, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #1E293B;
+  transition: all var(--transition-base);
+  box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.btn-light:hover {
+  box-shadow: 0 0 30px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.3),
+    rgba(236, 72, 153, 0.3)
+  );
+}
+
+/* Color-specific buttons */
+.btn-water-primary {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: visible;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.3) 0%,
+    rgba(139, 92, 246, 0.3) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, #06B6D4 0%, #0891b2 100%);
+}
+
+.btn-water-secondary {
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: visible;
+  border: none;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.3) 0%,
+    rgba(139, 92, 246, 0.3) 100%
+  );
+  color: white;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(135deg, #8B5CF6 0%, #7c3aed 100%);
+}
+
+/* ============================================== */
+/* PANEL & CARD LAYOUTS */
+/* ============================================== */
+
+.panel-glass {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.06)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.25);
+  filter: saturate(1.05);
+  border-radius: 20px;
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-glass-large {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.06)
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 48px 0 rgba(31, 38, 135, 0.25);
+  border-radius: 20px;
+  padding: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-water {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.1),
+    rgba(139, 92, 246, 0.1)
+  );
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 12px 40px rgba(6, 182, 212, 0.2);
+  border-radius: 12px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-light {
+  background: linear-gradient(
+    135deg,
+    rgba(240, 246, 255, 0.8),
+    rgba(236, 253, 245, 0.9)
+  );
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+}
+
+.panel-morphism {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  padding: 2rem;
+}
+
+.card-glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 20px rgba(31, 38, 135, 0.25);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all var(--transition-base);
+}
+
+.card-water {
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.1),
+    rgba(139, 92, 246, 0.1)
+  );
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  box-shadow: 0 10px 22px rgba(6, 182, 212, 0.3);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all var(--transition-base);
+}
+
+.card-water:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(6, 182, 212, 0.3);
+}
+
+.card-light {
+  background: linear-gradient(
+    135deg,
+    rgba(240, 246, 255, 0.55),
+    rgba(255, 255, 255, 0.85)
+  );
+  border: 1px solid rgba(99, 102, 241, 0.22);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.18);
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+/* ============================================== */
+/* GRADIENT & ANIMATION UTILITIES */
+/* ============================================== */
+
+.gradient-primary {
+  background: linear-gradient(
+    135deg,
+    #6366F1 0%,
+    #EC4899 100%
+  );
+}
+
+.gradient-secondary {
+  background: linear-gradient(
+    135deg,
+    #06B6D4 0%,
+    #8B5CF6 100%
+  );
+}
+
+.gradient-tertiary {
+  background: linear-gradient(
+    135deg,
+    #F97316 0%,
+    #EF4444 100%
+  );
+}
+
+.gradient-cool {
+  background: linear-gradient(
+    135deg,
+    #0EA5E9 0%,
+    #06B6D4 100%
+  );
+}
+
+.gradient-warm {
+  background: linear-gradient(
+    135deg,
+    #FBBF24 0%,
+    #F97316 100%
+  );
+}
+
+/* Animated gradient */
+.gradient-shift {
+  background-size: 400% 400%;
+  animation: gradientAnimation 8s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* ============================================== */
+/* REFLECTION & SHINE EFFECTS */
+/* ============================================== */
+
+.reflect-glass {
+  position: relative;
+}
+
+.reflect-glass::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 16px 16px 0 0;
+  pointer-events: none;
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ============================================== */
+/* RESPONSIVE ADJUSTMENTS */
+/* ============================================== */
+
+@media (max-width: 768px) {
+  .glass-container,
+  .light-container,
+  .water-panel {
+    padding: 1.5rem;
+  }
+
+  .glass-panel,
+  .light-panel {
+    padding: 1.5rem;
+  }
+
+  .btn-glass,
+  .water-button,
+  .btn-light {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .morphism-glass-light,
+  .morphism-water-light,
+  .morphism-glass-water {
+    padding: 1.5rem;
+  }
+}
+
+/* ============================================== */
+/* DARK MODE SUPPORT */
+/* ============================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --glass-background: rgba(30, 41, 59, 0.3);
+    --glass-border: 1px solid rgba(148, 163, 184, 0.2);
+    --light-glow: 0 0 20px rgba(99, 102, 241, 0.2);
+  }
+
+  .glass,
+  .glass-panel,
+  .glass-card {
+    background: rgba(30, 41, 59, 0.2);
+    border-color: rgba(148, 163, 184, 0.15);
+  }
+
+  .light-text {
+    color: #F1F5F9;
+    text-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+  }
+}
